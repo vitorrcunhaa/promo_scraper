@@ -1,0 +1,8 @@
+ https://www.freecodecamp.org/news/scheduling-jobs-in-a-django-application-using-heroku-scheduler-13c971a22979/
+
+ https://medium.com/beginners-guide-to-mobile-web-development/convert-django-website-to-a-progressive-web-app-3536bc4f2862
+
+ https://www.jujens.eu/posts/en/2020/Feb/29/django-pwa/
+
+ https://pypi.org/project/django-pwa/
+

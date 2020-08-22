@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>Promo Scraper by Vitor Cunha</title>
+	{% load static %}
+	<!-- Custom fonts for this template-->
+	<link href="{% static "vendor/fontawesome-free/css/all.min.css" %}" rel="stylesheet" type="text/css">
+	<!-- Custom styles for this template-->
+	<link href="{% static "css/sb-admin.css" %}" rel="stylesheet">
+	<link href="{% static "css/tags.css" %}" rel="stylesheet">
+	<!-- Bootstrap core JavaScript-->
+	<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+	<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+	<!-- Core plugin JavaScript-->
+	<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+	<script src="{% static 'js/tags.js' %}"></script>
+
+	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+	<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+
+</head>
+<body>
+<div class="container" style="padding: 30px;">
+	<div class="row justify-content-center">
+
+		<form id="form" action="{% url 'index' %}" method="post">
+			{% csrf_token %}
+
+			<h2 class="text-center" style="margin-bottom:25px;">Promo Scraper - By <a href="https://vitorcunha.me">Vitor
+				Cunha</a></h2>
+
+			<script>$(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
+			</script>
+			<button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
+							title="The words you enter will be the keywords that a search algorithm will use on the offer sites.
+							 If successful, it will send you an email containing the offer link. The algorithm will run every X hours
+							  you select, looking for possible new matches. It will search for offers from the last two days in the offer websites.">
+				How does it work?
+			</button>
+			<br><br>
+			<br>
+			<label>Add words for products and brands of your interest (maximum 8).</label>
+			<input id="form-tags-1" name="tags-1" type="text" value="Example" required>
+			<label for="exampleFormControlSelect2">How often do you want the algorithm to look for offers?</label>
+			<select class="form-control" name="interval">
+				<option selected="selected" value="6">Every 6 hours</option>
+				<option value="12">Every 12 hours</option>
+				<option value="24">Every 24 hours (once per day)</option>
+			</select>
+			<br>
+			<button type="submit" onclick="validateForm()" class="btn btn-primary">Submit</button>
+			<script>
+        function validateForm() {
+          let input = document.getElementById("form-tags-1").value;
+
+          if (input === "") {
+            alert("Input words can't be empty");
+          }
+        }
+			</script>
+		</form>
+	</div>
+</div>
+</body>
+</html>
