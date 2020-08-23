@@ -7,3 +7,9 @@
  https://pypi.org/project/django-pwa/
 
 https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html
+
+https://www.youtube.com/watch?v=GMbVzl_aLxM
+
+https://devcenter.heroku.com/articles/scheduling-custom-django-management-commands
+
+https://devcenter.heroku.com/articles/django-app-configuration
