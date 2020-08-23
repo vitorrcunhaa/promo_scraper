@@ -4,9 +4,22 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
-	<meta name="author" content="">
+	<meta name="author" content="Vitor Cunha">
+	<meta name="image" property="og:image" content="https://i.postimg.cc/xjXmG1MH/ps-logo.jpg">
+	<meta name="description" property="og:description" content="Promo Scraper - By Vitor Cunha">
+
 	<title>Promo Scraper by Vitor Cunha</title>
 	{% load static %}
+
+	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="manifest" href="{% static 'site.webmanifest' %}">
+	<link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' %}" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="theme-color" content="#ffffff">
+
 	<!-- Custom fonts for this template-->
 	<link href="{% static "vendor/fontawesome-free/css/all.min.css" %}" rel="stylesheet" type="text/css">
 	<!-- Custom styles for this template-->
@@ -33,10 +46,12 @@
 
 		<form id="form" action="{% url 'index' %}" method="post">
 			{% csrf_token %}
-			<a href="{% url 'home' %}" style="padding-left: 5%;" title="Go Home"><i class="fas fa-home" style="color: #5a6268;"></i> </a>
-			<a href="{% url 'logout' %}" style="float: right; padding-right: 5%;" title="Logout"><i class="fas fa-sign-out-alt" style="color: #5a6268;"></i> </a><br><br>
-			<h2 class="text-center" style="margin-bottom:25px;">Promo Scraper - By <a href="https://vitorcunha.me">Vitor
-				Cunha</a></h2>
+			<a href="{% url 'home' %}" style="padding-left: 5%;" title="Go Home"><i class="fas fa-home fa-lg"
+																																							style="color: #5a6268;"></i> </a>
+			<a href="{% url 'logout' %}" style="float: right; padding-right: 5%;" title="Logout"><i
+				class="fas fa-sign-out-alt fa-lg" style="color: #5a6268;"></i> </a><br><br>
+			<h2 class="text-center">Promo Scraper</h2>
+			<h4 class="text-center" style="margin-bottom:25px;">By <a href="https://vitorcunha.me">Vítor Cunha</a></h4>
 
 			<script>$(function () {
         $('[data-toggle="tooltip"]').tooltip()
