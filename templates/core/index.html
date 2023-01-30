@@ -74,6 +74,30 @@
 			</select>
 			<br>
 			<button type="submit" onclick="validateForm()" class="btn btn-primary">Submit</button>
+
+			<br><br>
+
+			<h3>Check out matches we already found for you!</h3>
+			{% if matches %}
+				<p>Matches found: {{ matches|length }}</p>
+
+				{% for match in matches %}
+					<div class="card" style="width: 18rem;">
+						<div class="card-body">
+							<h5 class="card-title">{{ match.name }}</h5>
+							<h6 class="card-subtitle mb-2 text-muted">Price: {{ match.price }}</h6>
+							<p class="card-text">{% if match.coupon %}{{ match.coupon }}{% else %}No Coupon found.{% endif %}</p>
+							<a href="{{ match.link }}" class="card-link">Product link</a>
+							<img src="{{ match.image }}" class="card-img-top" alt="...">
+						</div>
+					</div>
+					<br>
+				{% endfor %}
+
+				{% else %}
+				<p>No matches found.</p>
+			{% endif %}
+
 			<script>
         function validateForm() {
           let input = document.getElementById("form-tags-1").value;

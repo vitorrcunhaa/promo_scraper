@@ -1,5 +1,6 @@
 import re
 import string
+from decimal import Decimal
 
 import requests
 from django.contrib.auth import authenticate, login
@@ -9,27 +10,90 @@ from django.shortcuts import render, redirect
 from bs4 import BeautifulSoup
 
 from core.forms import SignUpForm
+from match.models import Match
 
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36'
+}
 HARDMOB_URL = 'https://www.hardmob.com.br/forums/407-Promocoes'
+GATRY_URL = 'https://gatry.com/'
+
+
+def get_match_from_hardmob_page(request, url, headers, interests_list):
+    """Tries to find a match on hardmob's page and populate Match object with the data found."""
+    page = requests.get(url, headers=headers)
+    soup_object = BeautifulSoup(page.content, 'html.parser')
+    h3s = soup_object.findAll('h3', {'class': 'threadtitle'})
+    links = []
+    allow = string.ascii_letters + string.digits
+    for h3 in h3s:
+        for word in h3.text.split():
+            word = re.sub('[^%s]' % allow, '', word).lower()
+            if word in interests_list:
+                links.append('https://www.hardmob.com.br/' + h3.a.get('href'))
+    print(links)
+
+
+def handle_gatry_coupon(parent):
+    coupon = parent.find('p', {'class': 'comment text-break'})
+    if coupon:
+        allow = string.ascii_letters + string.digits
+        for word in coupon.text.split():
+            word = re.sub('[^%s]' % allow, '', word).lower()
+            if word == 'cupom':
+                return coupon.text.replace(' ', '')
+    else:
+        return None
+
+
+def handle_gatry_price(parent):
+    price = parent.find('p', {'class': 'price'}).text
+    match = re.search('[\d\s.,]*\d', price)
+    if match:
+        price = match.group(0)
+        price = Decimal(price.replace(',', '.'))
+        return price
+
+    else:
+        return None
+
+
+def get_match_from_gatry_page(request, url, headers, interests_list):
+    """Tries to find a match on gatry's page and populate Match object with the data found."""
+    page = requests.get(url, headers=headers)
+    soup_object = BeautifulSoup(page.content, 'html.parser')
+    h3s = soup_object.findAll('h3')
+    allow = string.ascii_letters + string.digits
+    for h3 in h3s:
+        for word in h3.text.split():
+            word = re.sub('[^%s]' % allow, '', word).lower()
+            if word in interests_list:
+                """This is basically where the match happens. If there's a match, we'll 
+                try to get the name, link, coupon, price and image of the product."""
+                name = h3.text
+                link = h3.contents[0].attrs['href']
+                coupon = handle_gatry_coupon(h3.parent)
+                price = handle_gatry_price(h3.parent)
+                image = h3.parent.parent.find('div', {'class': 'image'}).find('a').find('img').attrs['src']
+                Match.objects.create(
+                    name=name,
+                    price=price,
+                    link=link,
+                    coupon=coupon,
+                    user=request.user,
+                    image=image,
+                )
 
 
 def index(request):
+
     if request.method == 'POST':
         interests_list = request.POST['tags-1'].split(',')
-        interval = request.POST['interval']
-        hardmob_page = requests.get(HARDMOB_URL)
-        soup = BeautifulSoup(hardmob_page.content, 'html.parser')
-        h3s = soup.findAll('h3', {'class': 'threadtitle'})
-        links = []
-        allow = string.ascii_letters + string.digits
-        for h3 in h3s:
-            for word in h3.text.split():
-                word = re.sub('[^%s]' % allow, '', word).lower()
-                if word in interests_list:
-                    links.append('https://www.hardmob.com.br/' + h3.a.get('href'))
-        print(links)
-        return render(request, 'core/index.html')
-    return render(request, 'core/index.html')
+        # interval = request.POST['interval']
+        # hardmob_matches = get_match_from_hardmob_page(request, HARDMOB_URL, HEADERS, interests_list)
+        get_match_from_gatry_page(request, GATRY_URL, HEADERS, interests_list)
+
+    return render(request, 'core/index.html', {'matches': Match.objects.all()})
 
 
 def register(request):
