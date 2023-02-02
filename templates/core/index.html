@@ -85,7 +85,7 @@
 					<div class="card" style="width: 18rem;">
 						<div class="card-body">
 							<h5 class="card-title">{{ match.name }}</h5>
-							<h6 class="card-subtitle mb-2 text-muted">Price: {{ match.price }}</h6>
+							<h6 class="card-subtitle mb-2 text-muted">Price: R$ {{ match.price }}</h6>
 							<p class="card-text">{% if match.coupon %}{{ match.coupon }}{% else %}No Coupon found.{% endif %}</p>
 							<a href="{{ match.link }}" class="card-link">Product link</a>
 							<img src="{{ match.image }}" class="card-img-top" alt="...">

@@ -51,6 +51,8 @@ def handle_gatry_price(parent):
     match = re.search('[\d\s.,]*\d', price)
     if match:
         price = match.group(0)
+        # For some reason, Gatry's price is in the format 1.234,56. So we need to remove the dot.
+        price = price.replace('.', '')
         price = Decimal(price.replace(',', '.'))
         return price
 
