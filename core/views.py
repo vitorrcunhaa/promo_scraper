@@ -93,7 +93,7 @@ def index(request):
         # hardmob_matches = get_match_from_hardmob_page(request, HARDMOB_URL, HEADERS, interests_list)
         get_match_from_gatry_page(request, GATRY_URL, HEADERS, interests_list)
 
-    return render(request, 'core/index.html', {'matches': Match.objects.all()})
+    return render(request, 'core/index.html', {'matches': Match.objects.filter(user=request.user)})
 
 
 def register(request):
