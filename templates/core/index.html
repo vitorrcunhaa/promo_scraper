@@ -63,9 +63,19 @@
 				How does it work?
 			</button>
 			<br><br>
+			{% if error %}
+					<div class="alert alert-danger" role="alert">
+						{{ error }}
+					</div>
+				{% endif %}
+				{% if success %}
+					<div class="alert alert-success" role="alert">
+						{{ success }}
+					</div>
+				{% endif %}
 			<br>
 			<label>Add words for products and brands of your interest (maximum 8).</label>
-			<input id="form-tags-1" name="tags-1" type="text" value="Example" required>
+			<input id="form-tags-1" name="tags-1" type="text" value="{{ user.keywords }}" required>
 			<label for="exampleFormControlSelect2">How often do you want the algorithm to look for offers?</label>
 			<select class="form-control" name="interval">
 				<option selected="selected" value="6">Every 6 hours</option>
@@ -74,15 +84,29 @@
 			</select>
 			<br>
 			<button type="submit" onclick="validateForm()" class="btn btn-primary">Submit</button>
-
+			<hr>
+			<br>
+			<span>Wanna search now?</span>
 			<br><br>
-
+			{% if user.instant_searches_left and user.instant_searches_left > 0 %}
+				<button type="" data-toggle="tooltip" data-placement="auto"
+							title="Don't want to wait for the next search? Use an instant search!
+							It will use one of your instant searches and run the algorithm right away."
+								onclick="" class="btn btn-secondary">Search now</button>
+			{% else %}
+				<button type="" onclick="" class="btn btn-secondary" disabled>Search now</button>
+			{% endif %}
+			<br><br>
+			<span>You have <strong>{{ user.instant_searches_left }}</strong> instant searches left.</span>
+			<br><br>
+			<hr>
 			<h3>Check out matches we already found for you!</h3>
 			{% if matches %}
 				<p>Matches found: {{ matches|length }}</p>
 
+			<div class="row">
 				{% for match in matches %}
-					<div class="card" style="width: 18rem;">
+					<div class="card col-6 mt-2 mb-2" style="width: 18rem;">
 						<div class="card-body">
 							<h5 class="card-title">{{ match.name }}</h5>
 							<h6 class="card-subtitle mb-2 text-muted">Price: R$ {{ match.price }}</h6>
@@ -91,8 +115,13 @@
 							<img src="{{ match.image }}" class="card-img-top" alt="...">
 						</div>
 					</div>
+					{% if forloop.counter|divisibleby:2 %}
+						<!-- Add a new row after every 2 cards -->
+						</div><div class="row">
+					{% endif %}
 					<br>
 				{% endfor %}
+			</div>
 
 				{% else %}
 				<p>No matches found.</p>

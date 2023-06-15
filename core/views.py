@@ -1,3 +1,4 @@
+import datetime
 import re
 import string
 from decimal import Decimal
@@ -17,8 +18,10 @@ HEADERS = {
 }
 HARDMOB_URL = 'https://www.hardmob.com.br/forums/407-Promocoes'
 GATRY_URL = 'https://gatry.com/'
+BOLETANDO_URL = 'https://boletando.com/'
 
 
+# Deprecated. It's only getting links.
 def get_match_from_hardmob_page(request, url, headers, interests_list):
     """Tries to find a match on hardmob's page and populate Match object with the data found."""
     page = requests.get(url, headers=headers)
@@ -31,7 +34,12 @@ def get_match_from_hardmob_page(request, url, headers, interests_list):
             word = re.sub('[^%s]' % allow, '', word).lower()
             if word in interests_list:
                 links.append('https://www.hardmob.com.br/' + h3.a.get('href'))
-    print(links)
+
+
+def check_match_already_exists(name, user):
+    if Match.objects.filter(name=name, user=user, date_match_found__gte=datetime.date.today()).exists():
+        return True
+    return False
 
 
 def handle_gatry_coupon(parent):
@@ -73,6 +81,8 @@ def get_match_from_gatry_page(request, url, headers, interests_list):
                 """This is basically where the match happens. If there's a match, we'll 
                 try to get the name, link, coupon, price and image of the product."""
                 name = h3.text
+                if check_match_already_exists(name, request.user):
+                    continue
                 link = h3.contents[0].attrs['href']
                 coupon = handle_gatry_coupon(h3.parent)
                 price = handle_gatry_price(h3.parent)
@@ -87,15 +97,59 @@ def get_match_from_gatry_page(request, url, headers, interests_list):
                 )
 
 
+def handle_boletando_price(price):
+    price = price.split(' ')[1]
+    price = price.replace('.', '')  # remove dot for values over 1000
+    return Decimal(price.replace(',', '.'))
+
+
+def get_match_from_boletando_page(request, url, headers, interests_list):
+    """Tries to find a match on gatry's page and populate Match object with the data found."""
+    page = requests.get(url, headers=headers)
+    soup_object = BeautifulSoup(page.content, 'html.parser')
+    articles = soup_object.findAll('article')
+    allow = string.ascii_letters + string.digits
+    for article in articles:
+        for word in article.find('h3').find('a').text.split():
+            word = re.sub('[^%s]' % allow, '', word).lower()
+            if word in interests_list:
+                """This is basically where the match happens. If there's a match, we'll 
+                try to get the name, link, coupon, price and image of the product."""
+                name = article.find('h3').find('a').text
+                if check_match_already_exists(name, request.user):
+                    continue
+                coupon = ''
+                if article.find('div', {'class': 'rehub_offer_coupon'}):
+                    coupon = article.find('div', {'class': 'rehub_offer_coupon'}).find('span').text
+                link = article.find('h3').find('a').attrs['href']
+                price = handle_boletando_price(article.find('span', {'class': 'rh_regular_price'}).text)
+                image = article.find('figure').find('img').attrs['src']
+                Match.objects.create(
+                    name=name,
+                    price=price,
+                    link=link,
+                    coupon=coupon,
+                    user=request.user,
+                    image=image,
+                )
+
+
 def index(request):
 
+    # TODO Add success message when user submits keywords
     if request.method == 'POST':
-        interests_list = request.POST['tags-1'].split(',')
-        # interval = request.POST['interval']
-        # hardmob_matches = get_match_from_hardmob_page(request, HARDMOB_URL, HEADERS, interests_list)
-        get_match_from_gatry_page(request, GATRY_URL, HEADERS, interests_list)
+        try:
+            request.user.keywords = request.POST['tags-1']
+            request.user.save()
+            interests_list = request.POST['tags-1'].split(',')
+            get_match_from_boletando_page(request, BOLETANDO_URL, HEADERS, interests_list)
+            get_match_from_gatry_page(request, GATRY_URL, HEADERS, interests_list)
+        except:
+            error = 'Error trying to scrape for promotions, try again later.'
+            return render(request, 'core/index.html', {'error': error})
 
-    return render(request, 'core/index.html', {'matches': Match.objects.filter(user=request.user)})
+    return render(request, 'core/index.html', {'matches': Match.objects.filter(user=request.user),
+                                               'user': request.user})
 
 
 def register(request):

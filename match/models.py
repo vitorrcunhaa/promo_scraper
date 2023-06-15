@@ -17,5 +17,5 @@ class Match(models.Model):
     # zoom_best_price -> decimal price containing zoom best prices
 
     def __str__(self):
-        return self.name + " - " + self.price
+        return self.name + " - " + str(self.price) + " - " + str(self.date_match_found)
 
