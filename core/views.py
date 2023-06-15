@@ -144,9 +144,11 @@ def index(request):
             interests_list = request.POST['tags-1'].split(',')
             get_match_from_boletando_page(request, BOLETANDO_URL, HEADERS, interests_list)
             get_match_from_gatry_page(request, GATRY_URL, HEADERS, interests_list)
-        except:
+        except Exception as e:
+            throw_error = True
+
             error = 'Error trying to scrape for promotions, try again later.'
-            return render(request, 'core/index.html', {'error': error})
+            return render(request, 'core/index.html', {'error': e, 'throw_error': throw_error})
 
     return render(request, 'core/index.html', {'matches': Match.objects.filter(user=request.user),
                                                'user': request.user})
