@@ -68,6 +68,12 @@ def handle_gatry_price(parent):
         return None
 
 
+def handle_name_length(name):
+    if name.__len__() >= 128:
+        return name[:127]
+    return name
+
+
 def get_match_from_gatry_page(request, url, headers, interests_list):
     """Tries to find a match on gatry's page and populate Match object with the data found."""
     page = requests.get(url, headers=headers)
@@ -80,7 +86,7 @@ def get_match_from_gatry_page(request, url, headers, interests_list):
             if word in interests_list:
                 """This is basically where the match happens. If there's a match, we'll 
                 try to get the name, link, coupon, price and image of the product."""
-                name = h3.text
+                name = handle_name_length(h3.text)
                 if check_match_already_exists(name, request.user):
                     continue
                 link = h3.contents[0].attrs['href']
@@ -115,7 +121,7 @@ def get_match_from_boletando_page(request, url, headers, interests_list):
             if word in interests_list:
                 """This is basically where the match happens. If there's a match, we'll 
                 try to get the name, link, coupon, price and image of the product."""
-                name = article.find('h3').find('a').text
+                name = handle_name_length(article.find('h3').find('a').text)
                 if check_match_already_exists(name, request.user):
                     continue
                 coupon = ''
@@ -144,14 +150,13 @@ def index(request):
             interests_list = request.POST['tags-1'].split(',')
             get_match_from_boletando_page(request, BOLETANDO_URL, HEADERS, interests_list)
             get_match_from_gatry_page(request, GATRY_URL, HEADERS, interests_list)
-        except Exception as e:
-            throw_error = True
-
+            success = 'Promotions successfully scraped.'
+        except:
             error = 'Error trying to scrape for promotions, try again later.'
-            return render(request, 'core/index.html', {'error': e, 'throw_error': throw_error})
+            return render(request, 'core/index.html', {'error': error})
 
     return render(request, 'core/index.html', {'matches': Match.objects.filter(user=request.user),
-                                               'user': request.user})
+                                               'user': request.user, 'success': success})
 
 
 def register(request):
