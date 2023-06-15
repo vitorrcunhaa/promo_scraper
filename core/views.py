@@ -142,7 +142,7 @@ def get_match_from_boletando_page(request, url, headers, interests_list):
 
 def index(request):
 
-    # TODO Add success message when user submits keywords
+    success = None
     if request.method == 'POST':
         try:
             request.user.keywords = request.POST['tags-1']
