@@ -1,1 +1,0 @@
-web: gunicorn promo_scraper.wsgi

@@ -1,5 +1,3 @@
- https://www.freecodecamp.org/news/scheduling-jobs-in-a-django-application-using-heroku-scheduler-13c971a22979/
-
  https://medium.com/@django.course/7-ways-to-execute-scheduled-jobs-with-python-47d481d22b91
 
  https://github.com/agronholm/apscheduler
@@ -13,7 +11,3 @@
 https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html
 
 https://www.youtube.com/watch?v=GMbVzl_aLxM
-
-https://devcenter.heroku.com/articles/scheduling-custom-django-management-commands
-
-https://devcenter.heroku.com/articles/django-app-configuration
