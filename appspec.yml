@@ -12,6 +12,10 @@ hooks:
       - location: scripts/clean_instance.sh
         timeout: 300
         runas: ubuntu
+        onsuccess:
+          - echo "BeforeInstall hook succeeded!"
+        onerror:
+          - echo "BeforeInstall hook failed!"
   AfterInstall:
       - location: scripts/instance_os_dependencies.sh
         timeout: 300
@@ -25,6 +29,10 @@ hooks:
       - location: scripts/nginx.sh
         timeout: 300
         runas: ubuntu
+        onsuccess:
+          - echo "AfterInstall hook succeeded!"
+        onerror:
+          - echo "AfterInstall hook failed!"
   ApplicationStop:
       - location: scripts/stop_app.sh
         timeout: 300
@@ -35,6 +43,5 @@ hooks:
         runas: ubuntu
         onsuccess:
           - echo "ApplicationStart hook succeeded!"
-          - scripts/other_script.sh
         onerror:
           - echo "ApplicationStart hook failed!"
