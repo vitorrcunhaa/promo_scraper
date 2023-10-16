@@ -1,9 +1,7 @@
 #!/usr/bin/bash 
 
-sed -i 's/\[]/\["3.133.114.240"]/' /home/ubuntu/promo_scraper/promo_scraper/settings.py
-
-python manage.py migrate 
-python manage.py makemigrations     
+python manage.py migrate
+python manage.py makemigrations
 python manage.py collectstatic
 sudo service gunicorn restart
 sudo service nginx restart
