@@ -132,4 +132,4 @@ LOGOUT_REDIRECT_URL = 'home'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# test deploy pipeline
+# test deploy pipeline - check if DB objects persist
