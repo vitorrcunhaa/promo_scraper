@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 virtualenv /home/ubuntu/promo_scraper/env
 echo env created successfully

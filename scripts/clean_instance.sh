@@ -1,3 +1,3 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 sudo rm -rf /home/ubuntu/promo_scraper/*
