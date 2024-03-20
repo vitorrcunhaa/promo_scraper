@@ -3,7 +3,7 @@ set -e
 echo "Current working directory: $(pwd)"
 echo "Current user: $(whoami)"
 
-cd /home/ubuntu/promo_scraper
+cd /home/ubuntu/promo_scraper/
 
 echo "Now at c working directory: $(pwd)"
 
