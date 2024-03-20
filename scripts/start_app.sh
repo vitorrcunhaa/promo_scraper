@@ -4,7 +4,7 @@
 echo Migrations will be applied
 python manage.py migrate
 echo Migrations applied successfully
-python manage.py makemigrations
+#python manage.py makemigrations -> No need to make migrations here
 echo static files will be collected
 python manage.py collectstatic
 echo static files collected successfully

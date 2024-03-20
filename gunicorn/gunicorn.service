@@ -6,7 +6,7 @@ After=network.target
 User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/promo_scraper
-ExecStart=/home/ubuntu/env/bin/gunicorn \
+ExecStart=/home/ubuntu/promo_scraper/env/bin/gunicorn \
           --access-logfile - \
           --workers 3 \
           --bind unix:/run/gunicorn.sock \
