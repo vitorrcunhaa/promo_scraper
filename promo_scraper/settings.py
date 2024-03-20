@@ -131,3 +131,5 @@ LOGIN_REDIRECT_URL = '/core'
 LOGOUT_REDIRECT_URL = 'home'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# test deploy pipeline
