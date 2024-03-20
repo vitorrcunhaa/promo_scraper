@@ -2,11 +2,11 @@
 set -e
 
 echo Migrations will be applied
-python manage.py migrate
+python3 manage.py migrate
 echo Migrations applied successfully
 #python manage.py makemigrations -> No need to make migrations here
 echo static files will be collected
-python manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput
 echo static files collected successfully
 sudo service gunicorn restart
 sudo service nginx restart
